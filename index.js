@@ -2,14 +2,25 @@ const express = require('express')
 
 const server = express()
 
+const PORT = process.env.PORT || 9000
+
 server.use(express.json())
 
-server.get('/hello', (req,res) => {
-    res.json('hello, there')
+server.get('/api/hello', (req, res) => {
+  res.json({ message: 'api is working' })
 })
 
-const port =  process.env.PORT || 9000
+server.use('*', (req, res) => {
+  res.send('<h1>Hello, there!</h1>')
+})
 
-server.listen(port, ( ) => {
-    console.log(`listening on ${port}`)
+server.use((err, req, res, next) => {
+  res.status(500).json({
+    message: err.message,
+    stack: err.stack
+  })
+})
+
+server.listen(PORT, () => {
+  console.log(`listening on ${PORT}`)
 })
